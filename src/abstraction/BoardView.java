@@ -1,8 +1,10 @@
+package abstraction;
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
-public class TabuleiroVisual extends JFrame {
+public class BoardView extends JFrame {
     private static final int TAMANHO = 8;
     private static final Color COR1 = new Color(4, 26, 110);
     private static final Color COR2 = new Color(220, 224, 228);
@@ -11,7 +13,7 @@ public class TabuleiroVisual extends JFrame {
 
     // Classe principal*
 
-    public TabuleiroVisual() {
+    public BoardView() {
         setTitle("Tabuleiro de Damas");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(TAMANHO, TAMANHO));
@@ -45,15 +47,11 @@ public class TabuleiroVisual extends JFrame {
     //Carregar as imagens e verificar caso nao exista*
 
     private static Icon carregarIcone(String caminho) {
-        URL url = TabuleiroVisual.class.getResource(caminho);
+        URL url = BoardView.class.getResource(caminho);
         if (url == null) {
             System.err.println("Imagem não encontrada: " + caminho);
             return null;
         }
         return new ImageIcon(url);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(TabuleiroVisual::new);
     }
 }
