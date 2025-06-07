@@ -1,5 +1,4 @@
 import abstraction.BoardView;
-
 import javax.swing.*;
 
 public class Main {
