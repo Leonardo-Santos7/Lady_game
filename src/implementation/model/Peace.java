@@ -33,6 +33,7 @@ public class Peace {
 
     public Peace(Type type){
         this.type = type;
+        this.player = definePlayer(type);
     }
 
     public Peace(){

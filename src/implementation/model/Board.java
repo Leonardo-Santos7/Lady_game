@@ -9,7 +9,7 @@ public class Board {
         start();
     }
 
-    private void start(){
+    public void start(){
         house = new Peace[SIZE][SIZE];
 
         for (int i = 0; i < SIZE; i++) {
