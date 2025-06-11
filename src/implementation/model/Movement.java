@@ -17,11 +17,11 @@ public class Movement {
         return origin;
     }
 
-    private PositionCheckers getDestination(){
+    public PositionCheckers getDestination(){
         return destination;
     }
 
-    private PositionCheckers getPositionCaputed(){
+    public PositionCheckers getPositionCaputed(){
         return positionCaputed;
     }
 
