@@ -2,7 +2,7 @@ package implementation.core;
 
 import implementation.model.PositionCheckers;
 
-public interface checkerLogic {
+public interface CheckerLogic {
     boolean containsPeace(PositionCheckers positionPeace);
 
     boolean validateMovement(PositionCheckers positionPeace);

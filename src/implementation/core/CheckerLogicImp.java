@@ -2,7 +2,7 @@ package implementation.core;
 
 import implementation.model.*;
 
-public class CheckerLogicImp implements checkerLogic{
+public class CheckerLogicImp implements CheckerLogic {
     private Board board;
     private Player player1;
     private Player player2;
