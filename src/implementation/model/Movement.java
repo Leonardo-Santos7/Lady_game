@@ -24,4 +24,16 @@ public class Movement {
     private PositionCheckers getPositionCaputed(){
         return positionCaputed;
     }
+
+    public boolean movementSimple() {
+        return origin.rowDistance(destination) == 1;
+    }
+
+    public boolean isCapture(){
+        return isCapture;
+    }
+
+    public boolean isDiagonal(){
+        return origin.isDiagonalOf(destination);
+    }
 }
