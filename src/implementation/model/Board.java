@@ -1,5 +1,7 @@
 package implementation.model;
 
+import java.util.Arrays;
+
 public class Board {
     private static final int SIZE = 8;
     private Peace[][] house;
@@ -54,9 +56,9 @@ public class Board {
         setPeace(movement.getDestination(), peace);
         setPeace(movement.getOrigin(), new Peace());
 
-        if(movement.isCapture()){
-            setPeace(movement.getPositionCaputed(), new Peace());
-        }
+        // if(movement.isCapture()){
+        //     setPeace(movement.getPositionCaputed(), new Peace());
+        // }
     }
 
     public int countPeace(int player){

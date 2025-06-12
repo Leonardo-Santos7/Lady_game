@@ -39,16 +39,11 @@ public class CheckerLogicImp implements CheckerLogic {
 
     @Override
     public void executeMovement(PositionCheckers positionDestination, PositionCheckers positionOrigin) {
-        boolean isCaputure = positionOrigin.rowDistance(positionDestination) == 2;
-        PositionCheckers capturedPosition = null;
+       // boolean isCaputure = positionOrigin.rowDistance(positionDestination) == 2;
 
-        if(isCaputure){
-            int row = (positionOrigin.getRow() + positionDestination.getRow()) / 2;
-            int col = (positionOrigin.getColumn() + positionDestination.getColumn()) / 2;
-            capturedPosition = new PositionCheckers(row, col);
-        }
+       // PositionCheckers capturedPosition = null;
 
-        Movement movement = new Movement(positionOrigin, positionDestination, isCaputure, capturedPosition);
+        Movement movement = new Movement(positionOrigin, positionDestination);
 
         board.movementPeace(movement);
     }

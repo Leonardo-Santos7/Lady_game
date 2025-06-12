@@ -16,6 +16,7 @@ public class CheckersController extends CheckersEvent{
 
     @Override
     public void clickProcess(PositionCheckers positionCheckers) {
+
         if(!selectedPeace){
             if(checkerLogic.containsPeace(positionCheckers)){
                 selectedPeace = true;
@@ -41,7 +42,8 @@ public class CheckersController extends CheckersEvent{
         PositionCheckers destination = new PositionCheckers(rowDestination, columnDestination);
 
         if(checkerLogic.validateMovement(origin)){
-            checkerLogic.executeMovement(origin, destination);
+
+            checkerLogic.executeMovement(destination, origin);
             boardViewer.updateBoard();
             boardViewer.highlightsHouse(rowSelected, columnSelected, false);
 
@@ -58,4 +60,9 @@ public class CheckersController extends CheckersEvent{
         }
 
     }
+
+    public CheckerLogic getCheckerLogic() {
+        return checkerLogic;
+    }
+
 }
