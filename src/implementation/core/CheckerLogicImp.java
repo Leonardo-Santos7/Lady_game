@@ -34,7 +34,13 @@ public class CheckerLogicImp implements CheckerLogic {
 
     @Override
     public boolean validateMovement(PositionCheckers positionCheckers) {
-        return true;
+        Peace peace = board.getPeace(positionCheckers);
+
+        return peace != null && !peace.isEmpty() && peace.belongsToPlayer(playerActual.getNumber());
+    }
+
+    private void changePlayer(){
+        playerActual = (playerActual == player1) ? player2 : player1;
     }
 
     @Override
@@ -46,6 +52,8 @@ public class CheckerLogicImp implements CheckerLogic {
         Movement movement = new Movement(positionOrigin, positionDestination);
 
         board.movementPeace(movement);
+
+        changePlayer();
     }
 
     @Override
