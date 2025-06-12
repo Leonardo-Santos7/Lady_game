@@ -21,7 +21,7 @@ public class Movement {
         return destination;
     }
 
-  // public PositionCheckers getPositionCaputed(){
+// public PositionCheckers getPositionCaputed(){
   //      return positionCaputed;
   //  }
 
