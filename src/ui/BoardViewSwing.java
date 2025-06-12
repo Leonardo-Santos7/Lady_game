@@ -1,6 +1,5 @@
 package ui;
 
-import abstraction.BoardView;
 import abstraction.BoardViewer;
 import abstraction.CheckersController;
 import implementation.model.PositionCheckers;
@@ -110,7 +109,7 @@ public class BoardViewSwing extends JFrame implements BoardViewer {
     }
 
     private static Icon carregarIcone(String caminho) {
-        URL url = BoardView.class.getResource(caminho);
+        URL url = BoardViewSwing.class.getResource(caminho);
         if (url == null) {
             System.err.println("Imagem não encontrada: " + caminho);
             return null;
