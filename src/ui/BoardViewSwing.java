@@ -15,8 +15,8 @@ public class BoardViewSwing extends JFrame implements BoardViewer {
     private CheckersController controller;
 
     private static final int TAMANHO = 8;
-    private static final Color COR1 = new Color(4, 26, 110);
-    private static final Color COR2 = new Color(220, 224, 228);
+    private static final Color COR1 = new Color(234, 225, 225, 255);
+    private static final Color COR2 = new Color(14, 44, 136);
     private static final Icon PEAO_BRANCO = carregarIcone("/assets/pedraBranca.png");
     private static final Icon PEAO_VERMELHO = carregarIcone("/assets/pedraVermelha.png");
 

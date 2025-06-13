@@ -51,6 +51,11 @@ public class CheckerLogicImp implements CheckerLogic {
 
         Movement movement = new Movement(positionOrigin, positionDestination);
 
+        if(!movement.isDiagonal()) {
+            System.out.println("Movimento invalido");
+            return;
+        }
+
         board.movementPeace(movement);
 
         changePlayer();
