@@ -16,4 +16,19 @@ public class PositionCheckers {
     public int getColumn(){
         return column;
     }
+
+    public int rowDistance(PositionCheckers other){
+        return Math.abs(row - other.row);
+    }
+    public int columnDistance(PositionCheckers other){
+        return Math.abs(column - other.column);
+    }
+
+    public boolean isDiagonalOf(PositionCheckers other){
+        return Math.abs(row - other.row) == Math.abs(column - other.column);
+    }
+
+    public boolean isValidate(){
+        return row >= 0 && row < 8 && column >= 0 && column < 8;
+    }
 }
