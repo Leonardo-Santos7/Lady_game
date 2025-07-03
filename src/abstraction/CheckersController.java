@@ -41,7 +41,7 @@ public class CheckersController extends CheckersEvent{
         PositionCheckers origin = new PositionCheckers(rowOrigin, columnOrigin);
         PositionCheckers destination = new PositionCheckers(rowDestination, columnDestination);
 
-        if(checkerLogic.validateMovement(origin)){
+        if(checkerLogic.validateMovement(origin, destination)){
 
             checkerLogic.executeMovement(destination, origin);
             boardViewer.updateBoard();

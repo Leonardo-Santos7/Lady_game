@@ -33,11 +33,44 @@ public class CheckerLogicImp implements CheckerLogic {
     }
 
     @Override
-    public boolean validateMovement(PositionCheckers positionCheckers) {
-        Peace peace = board.getPeace(positionCheckers);
+    public boolean validateMovement(PositionCheckers origin, PositionCheckers destination) {
+        Peace peace = board.getPeace(origin);
+        if (peace == null || peace.isEmpty() || !peace.belongsToPlayer(playerActual.getNumber())) {
+            return false;
+        }
 
-        return peace != null && !peace.isEmpty() && peace.belongsToPlayer(playerActual.getNumber());
+        if (!board.getPeace(destination).isEmpty()) {
+            return false;
+        }
+
+        Movement movement = new Movement(origin, destination);
+
+
+        if (!movement.isDiagonal()) {
+            return false;
+        }
+
+        int rowDistance = origin.rowDistance(destination);
+
+        if (peace.isChecker()) {
+
+            return true;
+        } else {
+
+            if (rowDistance == 1) {
+                return true;
+            } else if (rowDistance == 2) {
+
+                PositionCheckers middle = movement.getPositionCaptured();
+                Peace midPeace = board.getPeace(middle);
+
+                return !midPeace.isEmpty() && !midPeace.belongsToPlayer(playerActual.getNumber());
+            } else {
+                return false;
+            }
+        }
     }
+
 
     private void changePlayer(){
         playerActual = (playerActual == player1) ? player2 : player1;
