@@ -1,5 +1,10 @@
 package abstraction;
 
+import implementation.core.CheckerLogicImp;
+import ui.BoardViewSwing;
+import implementation.core.CheckerLogic;
+import abstraction.CheckersController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +26,21 @@ public class MenuInicialTESTE extends JFrame {
         botaoRestart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Fecha o menu
-                new BoardView();
+
+                // Cria a interface gráfica do jogo
+                BoardViewSwing boardView = new BoardViewSwing();
+
+                // Cria a lógica do jogo
+                CheckerLogic logic = new CheckerLogicImp();
+
+                // Cria o controlador que conecta lógica e interface
+                CheckersController controller = new CheckersController(logic, boardView);
+
+                // Liga o controlador à interface para receber eventos
+                boardView.setController(controller);
+
+                // Atualiza o tabuleiro para mostrar o estado inicial
+                boardView.updateBoard();
             }
         });
         add(botaoRestart, BorderLayout.SOUTH);
@@ -30,3 +49,4 @@ public class MenuInicialTESTE extends JFrame {
         setVisible(true);
     }
 }
+

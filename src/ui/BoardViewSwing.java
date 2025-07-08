@@ -2,12 +2,14 @@ package ui;
 
 import abstraction.BoardViewer;
 import abstraction.CheckersController;
+import abstraction.MenuInicialTESTE;  
 import implementation.model.PositionCheckers;
 import implementation.model.Peace;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+
 
 public class BoardViewSwing extends JFrame implements BoardViewer {
     private final JButton[][] casas = new JButton[8][8];
@@ -115,5 +117,38 @@ public class BoardViewSwing extends JFrame implements BoardViewer {
             return null;
         }
         return new ImageIcon(url);
+    }
+
+    @Override
+    public void showMenu() {
+        JFrame menuFrame = new JFrame("Menu do Jogo");
+        menuFrame.setSize(300, 200);
+        menuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        menuFrame.setLayout(new BorderLayout());
+
+        JLabel label = new JLabel("Menu do Jogo", SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 16));
+        menuFrame.add(label, BorderLayout.NORTH);
+
+        JPanel panel = new JPanel();
+        JButton restartButton = new JButton("Reiniciar");
+        JButton exitButton = new JButton("Sair");
+
+        restartButton.addActionListener(e -> {
+            menuFrame.dispose();
+            this.dispose(); // fecha a janela principal
+            new MenuInicialTESTE(); // reabre o menu inicial
+        });
+
+        exitButton.addActionListener(e -> {
+            System.exit(0);
+        });
+
+        panel.add(restartButton);
+        panel.add(exitButton);
+
+        menuFrame.add(panel, BorderLayout.CENTER);
+        menuFrame.setLocationRelativeTo(null);
+        menuFrame.setVisible(true);
     }
 }
