@@ -33,33 +33,79 @@ public class CheckerLogicImp implements CheckerLogic {
     }
 
     @Override
-    public boolean validateMovement(PositionCheckers positionCheckers) {
-        Peace peace = board.getPeace(positionCheckers);
+    public boolean validateMovement(PositionCheckers origin, PositionCheckers destination) {
+        Peace peace = board.getPeace(origin);
+        if (peace == null || peace.isEmpty() || !peace.belongsToPlayer(playerActual.getNumber())) {
+            return false;
+        }
 
-        return peace != null && !peace.isEmpty() && peace.belongsToPlayer(playerActual.getNumber());
+        if (!board.getPeace(destination).isEmpty()) {
+            return false;
+        }
+
+        Movement movement = new Movement(origin, destination);
+
+
+        if (!movement.isDiagonal()) {
+            return false;
+        }
+
+        int rowDistance = origin.rowDistance(destination);
+
+        if (peace.isChecker()) {
+
+            return true;
+        } else {
+
+            if (rowDistance == 1) {
+                return true;
+            } else if (rowDistance == 2) {
+
+                PositionCheckers middle = movement.getPositionCaptured();
+                Peace midPeace = board.getPeace(middle);
+
+                return !midPeace.isEmpty() && !midPeace.belongsToPlayer(playerActual.getNumber());
+            } else {
+                return false;
+            }
+        }
     }
+
 
     private void changePlayer(){
         playerActual = (playerActual == player1) ? player2 : player1;
     }
 
     @Override
-    public void executeMovement(PositionCheckers positionDestination, PositionCheckers positionOrigin) {
-       // boolean isCaputure = positionOrigin.rowDistance(positionDestination) == 2;
+    public void executeMovement(PositionCheckers destination, PositionCheckers origin) {
 
-       // PositionCheckers capturedPosition = null;
-
-        Movement movement = new Movement(positionOrigin, positionDestination);
-
-        if(!movement.isDiagonal()) {
-            System.out.println("Movimento invalido");
+        Peace peaceAtDestination = board.getPeace(destination);
+        if (peaceAtDestination != null && !peaceAtDestination.isEmpty()) {
+            System.out.println("Movimento inválido: a casa de destino já está ocupada.");
             return;
         }
 
-        board.movementPeace(movement);
+        Movement movement = new Movement(origin, destination);
 
+        if (!movement.isDiagonal()) {
+            System.out.println("Movimento inválido: apenas movimentos diagonais são permitidos.");
+            return;
+        }
+
+        if (movement.isCapture()) {
+            PositionCheckers mid = movement.getPositionCaptured();
+            Peace middlePiece = board.getPeace(mid);
+
+            if (middlePiece.isEmpty() || middlePiece.belongsToPlayer(playerActual.getNumber())) {
+                System.out.println("Captura inválida: peça intermediária ausente ou é sua.");
+                return;
+            }
+        }
+
+        board.movementPeace(movement);
         changePlayer();
     }
+
 
     @Override
     public void restartGame() {
