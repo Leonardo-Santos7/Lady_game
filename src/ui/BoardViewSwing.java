@@ -17,13 +17,13 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
     private CheckersController controller;
 
     private static final int TAMANHO = 8;
-    private static final int TIME_LIMIT_SECONDS = 420;
+    private static final int TIME_LIMIT_SECONDS = 460;
     private static final Color COR1 = new Color(234, 225, 225, 255);
     private static final Color COR2 = new Color(14, 44, 136);
-    private static final Icon PEAO_BRANCO = carregarIcone("/assets/pedraBranca.png");
-    private static final Icon PEAO_VERMELHO = carregarIcone("/assets/pedraVermelha.png");
-    private static final Icon DAMA_VERMELHA = carregarIcone("/assets/dama_vermelha.png");
-    private static final Icon DAMA_BRANCA = carregarIcone("/assets/dama_branca.png");
+    private static final Icon PEAO_BRANCO = carregarIcone("assets/pedraBranca.png");
+    private static final Icon PEAO_VERMELHO = carregarIcone("assets/pedraVermelha.png");
+    private static final Icon DAMA_VERMELHA = carregarIcone("assets/dama_vermelha.png");
+    private static final Icon DAMA_BRANCA = carregarIcone("assets/dama_branca.png");
 
     private JPanel cardPanel;
     private JPanel menuPanel;
@@ -44,7 +44,7 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
     private void initUI() {
         setTitle("Jogo de Damas");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(800, 800);
         setLocationRelativeTo(null);
 
         cardPanel = new JPanel(new CardLayout());
