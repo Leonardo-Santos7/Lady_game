@@ -6,7 +6,7 @@ public interface BoardViewer {
     void messages(String message);
 
     interface BoardView {
-        // Métodos para alternar entre as visualizações
+
         void showInitialMenu();
     }
 }

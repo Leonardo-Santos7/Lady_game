@@ -1,5 +1,6 @@
 package implementation.core;
 
+import implementation.factories.PeaceFactory;
 import implementation.model.*;
 
 public class CheckerLogicImp implements CheckerLogic {
@@ -8,7 +9,6 @@ public class CheckerLogicImp implements CheckerLogic {
     private Player player2;
     private Player playerActual;
 
-    // Novos campos para contagem de peças capturadas
     private int player1CapturedPieces;
     private int player2CapturedPieces;
     private Integer winnerPlayerNumber = null;
@@ -93,13 +93,18 @@ public class CheckerLogicImp implements CheckerLogic {
             return true;
         } else {
 
+            int direction = destination.getRow() - origin.getRow();
+
+            if ((playerActual.getNumber() == 1 && direction != -1 && direction != -2) ||
+                    (playerActual.getNumber() == 2 && direction != 1 && direction != 2)) {
+                return false;
+            }
+
             if (rowDistance == 1) {
                 return true;
             } else if (rowDistance == 2) {
-
                 PositionCheckers middle = movement.getPositionCaptured();
                 Peace midPeace = board.getPeace(middle);
-
                 return !midPeace.isEmpty() && !midPeace.belongsToPlayer(playerActual.getNumber());
             } else {
                 return false;
@@ -108,7 +113,7 @@ public class CheckerLogicImp implements CheckerLogic {
     }
 
 
-    private void changePlayer(){
+    void changePlayer(){
         playerActual = (playerActual == player1) ? player2 : player1;
     }
 
@@ -121,68 +126,90 @@ public class CheckerLogicImp implements CheckerLogic {
             return;
         }
 
-        if (!board.getPeace(destination).isEmpty()) {
-            System.out.println("Movimento inválido: a casa de destino já está ocupada.");
-            return;
-        }
-
         Movement movement = new Movement(origin, destination);
+        MovementExecutor executor = peace.isChecker()
+                ? new CheckerMovementExecutor(board, movement, playerActual, this)
+                : new RegularMovementExecutor(board, movement, playerActual, this);
 
-        if (!movement.isDiagonal()) {
-            System.out.println("Movimento inválido: apenas movimentos diagonais são permitidos.");
-            return;
-        }
+        executor.performMove();
+    }
 
-        if (peace.isChecker()) {
-            int rowDiff = origin.rowDistance(destination);
-            int rowStep = (destination.getRow() - origin.getRow()) / rowDiff;
-            int colStep = (destination.getColumn() - origin.getColumn()) / rowDiff;
+    public boolean canCaptureAgain(PositionCheckers from) {
+        Peace piece = board.getPeace(from);
 
-            int r = origin.getRow() + rowStep;
-            int c = origin.getColumn() + colStep;
+        if (piece.isEmpty() || !piece.belongsToPlayer(playerActual.getNumber())) return false;
 
-            while (r != destination.getRow() && c != destination.getColumn()) {
-                PositionCheckers pos = new PositionCheckers(r, c);
-                Peace mid = board.getPeace(pos);
+        int[][] directions = {
+                {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+        };
 
-                if (!mid.isEmpty() && !mid.belongsToPlayer(playerActual.getNumber())) {
-                    board.setPeace(pos, new Peace());
-                    break;
-                }
+        for (int[] dir : directions) {
+            int r = from.getRow() + dir[0];
+            int c = from.getColumn() + dir[1];
 
-                r += rowStep;
-                c += colStep;
-            }
-        } else if (movement.isCapture()) {
-            PositionCheckers mid = movement.getPositionCaptured();
-            Peace middlePiece = board.getPeace(mid);
+            if (!new PositionCheckers(r, c).isValidate()) continue;
 
-            if (middlePiece.isEmpty() || middlePiece.belongsToPlayer(playerActual.getNumber())) {
-                System.out.println("Captura inválida: peça intermediária ausente ou é sua.");
-                return;
-            }
+            Peace adjacent = board.getPeace(new PositionCheckers(r, c));
+            if (adjacent.isEmpty() || adjacent.belongsToPlayer(playerActual.getNumber())) continue;
 
-            if (playerActual == player1) {
-                player1CapturedPieces++;
-            } else {
-                player2CapturedPieces++;
-            }
+            int jumpRow = r + dir[0];
+            int jumpCol = c + dir[1];
+            PositionCheckers jumpPos = new PositionCheckers(jumpRow, jumpCol);
 
-            board.setPeace(mid, new Peace());
-        }
-
-        board.movementPeace(movement);
-
-        Peace movedPiece = board.getPeace(destination);
-        if (!movedPiece.isChecker()) {
-            if ((movedPiece.getPlayer() == 1 && destination.getRow() == 0) ||
-                    (movedPiece.getPlayer() == 2 && destination.getRow() == 7)) {
-                movedPiece.promoteToChecker();
+            if (jumpPos.isValidate() && board.getPeace(jumpPos).isEmpty()) {
+                return true;
             }
         }
 
-        changePlayer();
+        return false;
+    }
 
+    public Movement findFirstCaptureMove(PositionCheckers from) {
+        Peace piece = board.getPeace(from);
+        if (piece == null || piece.isEmpty() || !piece.belongsToPlayer(playerActual.getNumber())) {
+            return null;
+        }
+
+        int[][] directions = {
+                {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+        };
+
+        for (int[] dir : directions) {
+            int midRow = from.getRow() + dir[0];
+            int midCol = from.getColumn() + dir[1];
+            int destRow = from.getRow() + dir[0] * 2;
+            int destCol = from.getColumn() + dir[1] * 2;
+
+            PositionCheckers middlePos = new PositionCheckers(midRow, midCol);
+            PositionCheckers destination = new PositionCheckers(destRow, destCol);
+
+            if (!middlePos.isValidate() || !destination.isValidate()) continue;
+
+            Peace middlePiece = board.getPeace(middlePos);
+            Peace destinationPiece = board.getPeace(destination);
+
+            boolean isEnemy = !middlePiece.isEmpty() && !middlePiece.belongsToPlayer(playerActual.getNumber());
+            boolean isDestEmpty = destinationPiece.isEmpty();
+
+            if (isEnemy && isDestEmpty) {
+                return new Movement(from, destination);
+            }
+        }
+
+        return null;
+    }
+
+
+
+    protected void incrementCapturedCount() {
+        if (playerActual == player1) {
+            player1CapturedPieces++;
+        } else {
+            player2CapturedPieces++;
+        }
+    }
+
+    protected void checkVictoryCondition() {
         if (board.countPeace(player1.getNumber()) == 0) {
             winnerPlayerNumber = player2.getNumber();
         } else if (board.countPeace(player2.getNumber()) == 0) {
