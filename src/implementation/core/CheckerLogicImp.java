@@ -93,13 +93,18 @@ public class CheckerLogicImp implements CheckerLogic {
             return true;
         } else {
 
+            int direction = destination.getRow() - origin.getRow();
+
+            if ((playerActual.getNumber() == 1 && direction != -1 && direction != -2) ||
+                    (playerActual.getNumber() == 2 && direction != 1 && direction != 2)) {
+                return false;
+            }
+
             if (rowDistance == 1) {
                 return true;
             } else if (rowDistance == 2) {
-
                 PositionCheckers middle = movement.getPositionCaptured();
                 Peace midPeace = board.getPeace(middle);
-
                 return !midPeace.isEmpty() && !midPeace.belongsToPlayer(playerActual.getNumber());
             } else {
                 return false;
