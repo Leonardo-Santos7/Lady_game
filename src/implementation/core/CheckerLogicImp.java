@@ -1,5 +1,6 @@
 package implementation.core;
 
+import implementation.factories.PeaceFactory;
 import implementation.model.*;
 
 public class CheckerLogicImp implements CheckerLogic {
@@ -146,7 +147,14 @@ public class CheckerLogicImp implements CheckerLogic {
                 Peace mid = board.getPeace(pos);
 
                 if (!mid.isEmpty() && !mid.belongsToPlayer(playerActual.getNumber())) {
-                    board.setPeace(pos, new Peace());
+                    board.setPeace(pos, PeaceFactory.createEmpty());
+
+                    if (playerActual == player1) {
+                        player1CapturedPieces++;
+                    } else {
+                        player2CapturedPieces++;
+                    }
+
                     break;
                 }
 
@@ -168,7 +176,7 @@ public class CheckerLogicImp implements CheckerLogic {
                 player2CapturedPieces++;
             }
 
-            board.setPeace(mid, new Peace());
+            board.setPeace(mid, PeaceFactory.createEmpty());
         }
 
         board.movementPeace(movement);
@@ -189,7 +197,6 @@ public class CheckerLogicImp implements CheckerLogic {
             winnerPlayerNumber = player1.getNumber();
         }
     }
-
 
     @Override
     public void restartGame() {
