@@ -13,10 +13,11 @@ import java.net.URL;
 
 public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.BoardView {
     private final JButton[][] casas = new JButton[8][8];
-    private final JLabel lblInfo; // Mantido para mensagens gerais
+    private final JLabel lblInfo;
     private CheckersController controller;
 
     private static final int TAMANHO = 8;
+    private static final int TIME_LIMIT_SECONDS = 420;
     private static final Color COR1 = new Color(234, 225, 225, 255);
     private static final Color COR2 = new Color(14, 44, 136);
     private static final Icon PEAO_BRANCO = carregarIcone("/assets/pedraBranca.png");
@@ -24,11 +25,11 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
     private static final Icon DAMA_VERMELHA = carregarIcone("/assets/dama_vermelha.png");
     private static final Icon DAMA_BRANCA = carregarIcone("/assets/dama_branca.png");
 
-    private JPanel cardPanel; // Painel que usará CardLayout para alternar visualizações
-    private JPanel menuPanel; // Painel para a visualização do menu
-    private JPanel gameBoardPanel; // Painel para a visualização do tabuleiro do jogo
+    private JPanel cardPanel;
+    private JPanel menuPanel;
+    private JPanel gameBoardPanel;
 
-    // Novos componentes para o timer e contagem de peças
+    // componentes
     private JLabel lblTimer;
     private Timer gameTimer;
     private int secondsPassed;
@@ -65,7 +66,7 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
         titulo.setFont(new Font("Arial", Font.BOLD, 18));
         menuPanel.add(titulo, BorderLayout.CENTER);
 
-        // O botão "Iniciar Jogo" já existe e foi configurado.
+
         JButton botaoIniciar = new JButton("Iniciar Jogo");
         botaoIniciar.addActionListener(e -> {
             CheckerLogic logic = new CheckerLogicImp();
@@ -73,7 +74,7 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
             setController(controller);
             showGame();
             updateBoard();
-            startTimer(); // Inicia o timer quando o jogo começa
+            startTimer();
         });
         menuPanel.add(botaoIniciar, BorderLayout.SOUTH);
     }
@@ -104,18 +105,18 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
         }
         gameBoardPanel.add(boardGridPanel, BorderLayout.CENTER); // Adiciona o grid do tabuleiro ao centro
 
-        // Painel para informações (timer e peças capturadas)
+        // Painel(timer e peças capturadas)
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS)); // Layout vertical para as informações
 
-        // Adiciona o timer
+
         lblTimer = new JLabel("Tempo: 00:00");
         lblTimer.setFont(new Font("Arial", Font.PLAIN, 16));
         lblTimer.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza o texto
         infoPanel.add(lblTimer);
         infoPanel.add(Box.createVerticalStrut(10)); // Espaçamento
 
-        // Adiciona contagem de peças capturadas
+
         lblCapturedPlayer1 = new JLabel("Peças Capturadas (Jogador 1): 0");
         lblCapturedPlayer1.setFont(new Font("Arial", Font.PLAIN, 16));
         lblCapturedPlayer1.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -173,6 +174,10 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
 
         lblCapturedPlayer1.setText("Peças Capturadas (Jogador 1): " + controller.getCheckerLogic().getCapturedPieces(1));
         lblCapturedPlayer2.setText("Peças Capturadas (Jogador 2): " + controller.getCheckerLogic().getCapturedPieces(2));
+
+        if (controller.getCheckerLogic().getWinner() != -1) {
+            showWinnerScreen();
+        }
     }
 
     @Override
@@ -197,7 +202,7 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
         return new ImageIcon(url);
     }
 
-    // Métodos para o timer
+
     private void startTimer() {
         secondsPassed = 0;
         if (gameTimer != null) {
@@ -208,6 +213,12 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
             int minutes = secondsPassed / 60;
             int seconds = secondsPassed % 60;
             lblTimer.setText(String.format("Tempo: %02d:%02d", minutes, seconds));
+
+            if (secondsPassed >= TIME_LIMIT_SECONDS) {
+                stopTimer();
+                controller.getCheckerLogic().checkTimeVictory();
+                showWinnerScreen();
+            }
         });
         gameTimer.start();
     }
@@ -237,6 +248,20 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
     }
 
     public void showMenu() {
+        showInitialMenu();
+    }
+
+    private void showWinnerScreen() {
+        stopTimer();
+        int winner = controller.getCheckerLogic().getWinner();
+        String message;
+        if (winner == 0) {
+            message = "O jogo terminou em empate!";
+        } else {
+            message = "O Jogador " + winner + " venceu!";
+        }
+
+        JOptionPane.showMessageDialog(this, message, "Fim de Jogo", JOptionPane.INFORMATION_MESSAGE);
         showInitialMenu();
     }
 }
