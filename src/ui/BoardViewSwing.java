@@ -2,6 +2,7 @@ package ui;
 
 import abstraction.BoardViewer;
 import abstraction.CheckersController;
+import abstraction.MenuInicialTESTE;  
 import implementation.model.PositionCheckers;
 import implementation.model.Peace;
 
@@ -9,16 +10,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
+
 public class BoardViewSwing extends JFrame implements BoardViewer {
     private final JButton[][] casas = new JButton[8][8];
     private final JLabel lblInfo;
     private CheckersController controller;
 
     private static final int TAMANHO = 8;
-    private static final Color COR1 = new Color(4, 26, 110);
-    private static final Color COR2 = new Color(220, 224, 228);
+    private static final Color COR1 = new Color(234, 225, 225, 255);
+    private static final Color COR2 = new Color(14, 44, 136);
     private static final Icon PEAO_BRANCO = carregarIcone("/assets/pedraBranca.png");
     private static final Icon PEAO_VERMELHO = carregarIcone("/assets/pedraVermelha.png");
+    private static final Icon DAMA_VERMELHA = carregarIcone("/assets/dama_vermelha.png");
+    private static final Icon DAMA_BRANCA = carregarIcone("/assets/dama_branca.png");
 
     // Construtor vazio
     public BoardViewSwing() {
@@ -88,6 +92,8 @@ public class BoardViewSwing extends JFrame implements BoardViewer {
                     switch (tipoPeca) {
                         case PEACE_PLAYER1 -> botao.setIcon(PEAO_VERMELHO);
                         case PEACE_PLAYER2 -> botao.setIcon(PEAO_BRANCO);
+                        case CHECKERS_PLAYER1 -> botao.setIcon(DAMA_VERMELHA);
+                        case CHECKERS_PLAYER2 -> botao.setIcon(DAMA_BRANCA);
                         default -> botao.setIcon(null);
                     }
                 }
@@ -115,5 +121,38 @@ public class BoardViewSwing extends JFrame implements BoardViewer {
             return null;
         }
         return new ImageIcon(url);
+    }
+
+    @Override
+    public void showMenu() {
+        JFrame menuFrame = new JFrame("Menu do Jogo");
+        menuFrame.setSize(300, 200);
+        menuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        menuFrame.setLayout(new BorderLayout());
+
+        JLabel label = new JLabel("Menu do Jogo", SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 16));
+        menuFrame.add(label, BorderLayout.NORTH);
+
+        JPanel panel = new JPanel();
+        JButton restartButton = new JButton("Reiniciar");
+        JButton exitButton = new JButton("Sair");
+
+        restartButton.addActionListener(e -> {
+            menuFrame.dispose();
+            this.dispose(); // fecha a janela principal
+            new MenuInicialTESTE(); // reabre o menu inicial
+        });
+
+        exitButton.addActionListener(e -> {
+            System.exit(0);
+        });
+
+        panel.add(restartButton);
+        panel.add(exitButton);
+
+        menuFrame.add(panel, BorderLayout.CENTER);
+        menuFrame.setLocationRelativeTo(null);
+        menuFrame.setVisible(true);
     }
 }

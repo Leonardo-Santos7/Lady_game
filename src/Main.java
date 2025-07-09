@@ -1,6 +1,6 @@
+import abstraction.MenuInicialTESTE;
 import implementation.core.CheckerLogic;
 import implementation.core.CheckerLogicImp;
-import abstraction.BoardViewer;
 import abstraction.CheckersController;
 import ui.BoardViewSwing;
 
@@ -21,6 +21,8 @@ public class Main {
             boardViewerSwing.setController(controller);
 
             boardViewerSwing.setVisible(true);
+
+
         });
     }
 }
