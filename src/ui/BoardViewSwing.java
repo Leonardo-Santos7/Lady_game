@@ -170,9 +170,9 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
                 }
             }
         }
-        // Atualiza a contagem de peças capturadas
-        lblCapturedPlayer1.setText("Peças Capturadas (Jogador 1): " + controller.getCheckerLogic().getCapturedPieces(2)); // Jogador 1 captura peças do Jogador 2
-        lblCapturedPlayer2.setText("Peças Capturadas (Jogador 2): " + controller.getCheckerLogic().getCapturedPieces(1)); // Jogador 2 captura peças do Jogador 1
+
+        lblCapturedPlayer1.setText("Peças Capturadas (Jogador 1): " + controller.getCheckerLogic().getCapturedPieces(1));
+        lblCapturedPlayer2.setText("Peças Capturadas (Jogador 2): " + controller.getCheckerLogic().getCapturedPieces(2));
     }
 
     @Override

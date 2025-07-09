@@ -16,6 +16,9 @@ public interface CheckerLogic {
 
     int getTypePeace(PositionCheckers positionCheckers);
 
-    // Novo metodo para obter o número de peças capturadas
     int getCapturedPieces(int playerNumber);
+
+    void checkTimeVictory();
+
+    int getWinner();
 }
