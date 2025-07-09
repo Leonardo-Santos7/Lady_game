@@ -22,7 +22,7 @@ public class Main {
 
             boardViewerSwing.setVisible(true);
 
-            new MenuInicialTESTE().setVisible(true);
+
         });
     }
 }
