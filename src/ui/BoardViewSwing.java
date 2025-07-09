@@ -21,6 +21,8 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
     private static final Color COR2 = new Color(14, 44, 136);
     private static final Icon PEAO_BRANCO = carregarIcone("/assets/pedraBranca.png");
     private static final Icon PEAO_VERMELHO = carregarIcone("/assets/pedraVermelha.png");
+    private static final Icon DAMA_VERMELHA = carregarIcone("/assets/dama_vermelha.png");
+    private static final Icon DAMA_BRANCA = carregarIcone("/assets/dama_branca.png");
 
     private JPanel cardPanel; // Painel que usará CardLayout para alternar visualizações
     private JPanel menuPanel; // Painel para a visualização do menu
@@ -161,20 +163,8 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
                     switch (tipoPeca) {
                         case PEACE_PLAYER1 -> botao.setIcon(PEAO_VERMELHO);
                         case PEACE_PLAYER2 -> botao.setIcon(PEAO_BRANCO);
-                        case CHECKERS_PLAYER1 -> { // Peça se tornou Dama (vermelha)
-                            // Você precisará de um ícone para a Dama Vermelha
-                            // Por enquanto, usaremos o peão vermelho, mas o ideal é um ícone diferente
-                            botao.setIcon(PEAO_VERMELHO);
-                            // Exemplo: ImageIcon damaVermelha = carregarIcone("/assets/damaVermelha.png");
-                            // botao.setIcon(damaVermelha);
-                        }
-                        case CHECKERS_PLAYER2 -> { // Peça se tornou Dama (branca)
-                            // Você precisará de um ícone para a Dama Branca
-                            // Por enquanto, usaremos o peão branco, mas o ideal é um ícone diferente
-                            botao.setIcon(PEAO_BRANCO);
-                            // Exemplo: ImageIcon damaBranca = carregarIcone("/assets/damaBranca.png");
-                            // botao.setIcon(damaBranca);
-                        }
+                        case CHECKERS_PLAYER1 -> botao.setIcon(DAMA_VERMELHA);
+                        case CHECKERS_PLAYER2 -> botao.setIcon(DAMA_BRANCA);
                         default -> botao.setIcon(null);
                     }
                 }
