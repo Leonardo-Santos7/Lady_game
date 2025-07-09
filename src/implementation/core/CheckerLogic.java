@@ -15,4 +15,10 @@ public interface CheckerLogic {
     int getPlayerActual();
 
     int getTypePeace(PositionCheckers positionCheckers);
+
+    int getCapturedPieces(int playerNumber);
+
+    void checkTimeVictory();
+
+    int getWinner();
 }
