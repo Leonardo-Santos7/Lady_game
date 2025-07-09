@@ -9,7 +9,6 @@ public class CheckerLogicImp implements CheckerLogic {
     private Player player2;
     private Player playerActual;
 
-    // Novos campos para contagem de peças capturadas
     private int player1CapturedPieces;
     private int player2CapturedPieces;
     private Integer winnerPlayerNumber = null;
@@ -109,7 +108,7 @@ public class CheckerLogicImp implements CheckerLogic {
     }
 
 
-    private void changePlayer(){
+    void changePlayer(){
         playerActual = (playerActual == player1) ? player2 : player1;
     }
 
@@ -122,81 +121,30 @@ public class CheckerLogicImp implements CheckerLogic {
             return;
         }
 
-        if (!board.getPeace(destination).isEmpty()) {
-            System.out.println("Movimento inválido: a casa de destino já está ocupada.");
-            return;
-        }
-
         Movement movement = new Movement(origin, destination);
+        MovementExecutor executor = peace.isChecker()
+                ? new CheckerMovementExecutor(board, movement, playerActual, this)
+                : new RegularMovementExecutor(board, movement, playerActual, this);
 
-        if (!movement.isDiagonal()) {
-            System.out.println("Movimento inválido: apenas movimentos diagonais são permitidos.");
-            return;
+        executor.performMove();
+    }
+
+    protected void incrementCapturedCount() {
+        if (playerActual == player1) {
+            player1CapturedPieces++;
+        } else {
+            player2CapturedPieces++;
         }
+    }
 
-        if (peace.isChecker()) {
-            int rowDiff = origin.rowDistance(destination);
-            int rowStep = (destination.getRow() - origin.getRow()) / rowDiff;
-            int colStep = (destination.getColumn() - origin.getColumn()) / rowDiff;
-
-            int r = origin.getRow() + rowStep;
-            int c = origin.getColumn() + colStep;
-
-            while (r != destination.getRow() && c != destination.getColumn()) {
-                PositionCheckers pos = new PositionCheckers(r, c);
-                Peace mid = board.getPeace(pos);
-
-                if (!mid.isEmpty() && !mid.belongsToPlayer(playerActual.getNumber())) {
-                    board.setPeace(pos, PeaceFactory.createEmpty());
-
-                    if (playerActual == player1) {
-                        player1CapturedPieces++;
-                    } else {
-                        player2CapturedPieces++;
-                    }
-
-                    break;
-                }
-
-                r += rowStep;
-                c += colStep;
-            }
-        } else if (movement.isCapture()) {
-            PositionCheckers mid = movement.getPositionCaptured();
-            Peace middlePiece = board.getPeace(mid);
-
-            if (middlePiece.isEmpty() || middlePiece.belongsToPlayer(playerActual.getNumber())) {
-                System.out.println("Captura inválida: peça intermediária ausente ou é sua.");
-                return;
-            }
-
-            if (playerActual == player1) {
-                player1CapturedPieces++;
-            } else {
-                player2CapturedPieces++;
-            }
-
-            board.setPeace(mid, PeaceFactory.createEmpty());
-        }
-
-        board.movementPeace(movement);
-
-        Peace movedPiece = board.getPeace(destination);
-        if (!movedPiece.isChecker()) {
-            if ((movedPiece.getPlayer() == 1 && destination.getRow() == 0) ||
-                    (movedPiece.getPlayer() == 2 && destination.getRow() == 7)) {
-                movedPiece.promoteToChecker();
-            }
-        }
-
-        changePlayer();
-
+    protected void checkVictoryCondition() {
         if (board.countPeace(player1.getNumber()) == 0) {
             winnerPlayerNumber = player2.getNumber();
         } else if (board.countPeace(player2.getNumber()) == 0) {
             winnerPlayerNumber = player1.getNumber();
         }
     }
+
 
     @Override
     public void restartGame() {
