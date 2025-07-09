@@ -134,6 +134,73 @@ public class CheckerLogicImp implements CheckerLogic {
         executor.performMove();
     }
 
+    public boolean canCaptureAgain(PositionCheckers from) {
+        Peace piece = board.getPeace(from);
+
+        if (piece.isEmpty() || !piece.belongsToPlayer(playerActual.getNumber())) return false;
+
+        int[][] directions = {
+                {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+        };
+
+        for (int[] dir : directions) {
+            int r = from.getRow() + dir[0];
+            int c = from.getColumn() + dir[1];
+
+            if (!new PositionCheckers(r, c).isValidate()) continue;
+
+            Peace adjacent = board.getPeace(new PositionCheckers(r, c));
+            if (adjacent.isEmpty() || adjacent.belongsToPlayer(playerActual.getNumber())) continue;
+
+            int jumpRow = r + dir[0];
+            int jumpCol = c + dir[1];
+            PositionCheckers jumpPos = new PositionCheckers(jumpRow, jumpCol);
+
+            if (jumpPos.isValidate() && board.getPeace(jumpPos).isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Movement findFirstCaptureMove(PositionCheckers from) {
+        Peace piece = board.getPeace(from);
+        if (piece == null || piece.isEmpty() || !piece.belongsToPlayer(playerActual.getNumber())) {
+            return null;
+        }
+
+        int[][] directions = {
+                {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+        };
+
+        for (int[] dir : directions) {
+            int midRow = from.getRow() + dir[0];
+            int midCol = from.getColumn() + dir[1];
+            int destRow = from.getRow() + dir[0] * 2;
+            int destCol = from.getColumn() + dir[1] * 2;
+
+            PositionCheckers middlePos = new PositionCheckers(midRow, midCol);
+            PositionCheckers destination = new PositionCheckers(destRow, destCol);
+
+            if (!middlePos.isValidate() || !destination.isValidate()) continue;
+
+            Peace middlePiece = board.getPeace(middlePos);
+            Peace destinationPiece = board.getPeace(destination);
+
+            boolean isEnemy = !middlePiece.isEmpty() && !middlePiece.belongsToPlayer(playerActual.getNumber());
+            boolean isDestEmpty = destinationPiece.isEmpty();
+
+            if (isEnemy && isDestEmpty) {
+                return new Movement(from, destination);
+            }
+        }
+
+        return null;
+    }
+
+
+
     protected void incrementCapturedCount() {
         if (playerActual == player1) {
             player1CapturedPieces++;

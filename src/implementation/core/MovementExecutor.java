@@ -1,8 +1,6 @@
 package implementation.core;
 
-import implementation.model.Board;
-import implementation.model.Movement;
-import implementation.model.Player;
+import implementation.model.*;
 
 abstract class MovementExecutor {
     protected final Board board;
@@ -23,6 +21,17 @@ abstract class MovementExecutor {
 
         if (isCapture()) {
             handleCapture();
+            board.movementPeace(movement);
+            promoteIfNeeded();
+
+            if (logic.canCaptureAgain(movement.getDestination())) {
+                tryMultipleCaptures(movement.getDestination());
+            } else {
+                logic.changePlayer();
+            }
+
+            logic.checkVictoryCondition();
+            return;
         }
 
         board.movementPeace(movement);
@@ -30,6 +39,24 @@ abstract class MovementExecutor {
         logic.changePlayer();
         logic.checkVictoryCondition();
     }
+
+
+
+    protected void tryMultipleCaptures(PositionCheckers currentPosition) {
+        while (logic.canCaptureAgain(currentPosition)) {
+            Movement next = logic.findFirstCaptureMove(currentPosition);
+            if (next == null) break;
+
+            Peace piece = board.getPeace(currentPosition);
+            MovementExecutor executor = piece.isChecker()
+                    ? new CheckerMovementExecutor(board, next, player, logic)
+                    : new RegularMovementExecutor(board, next, player, logic);
+
+            executor.performMove();
+            currentPosition = next.getDestination();
+        }
+    }
+
 
     protected abstract boolean isCapture();
     protected abstract void handleCapture();
