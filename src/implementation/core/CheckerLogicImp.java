@@ -11,6 +11,7 @@ public class CheckerLogicImp implements CheckerLogic {
     // Novos campos para contagem de peças capturadas
     private int player1CapturedPieces;
     private int player2CapturedPieces;
+    private Integer winnerPlayerNumber = null;
 
     public CheckerLogicImp(){
         startGame();
@@ -22,8 +23,8 @@ public class CheckerLogicImp implements CheckerLogic {
         player2 = new Player(2, "Leonardo");
         playerActual = player1;
 
-        player1CapturedPieces = 0; // Inicializa contagem de peças capturadas
-        player2CapturedPieces = 0; // Inicializa contagem de peças capturadas
+        player1CapturedPieces = 0;
+        player2CapturedPieces = 0;
 
         board.start();
     }
@@ -161,6 +162,12 @@ public class CheckerLogicImp implements CheckerLogic {
                 return;
             }
 
+            if (playerActual == player1) {
+                player1CapturedPieces++;
+            } else {
+                player2CapturedPieces++;
+            }
+
             board.setPeace(mid, new Peace());
         }
 
@@ -175,6 +182,12 @@ public class CheckerLogicImp implements CheckerLogic {
         }
 
         changePlayer();
+
+        if (board.countPeace(player1.getNumber()) == 0) {
+            winnerPlayerNumber = player2.getNumber();
+        } else if (board.countPeace(player2.getNumber()) == 0) {
+            winnerPlayerNumber = player1.getNumber();
+        }
     }
 
 
@@ -208,4 +221,26 @@ public class CheckerLogicImp implements CheckerLogic {
         }
         return 0;
     }
+
+    @Override
+    public void checkTimeVictory() {
+        if (winnerPlayerNumber != null) return;
+
+        int capturedByPlayer1 = player1CapturedPieces;
+        int capturedByPlayer2 = player2CapturedPieces;
+
+        if (capturedByPlayer1 > capturedByPlayer2) {
+            winnerPlayerNumber = player1.getNumber();
+        } else if (capturedByPlayer2 > capturedByPlayer1) {
+            winnerPlayerNumber = player2.getNumber();
+        } else {
+            winnerPlayerNumber = 0;
+        }
+    }
+
+    @Override
+    public int getWinner() {
+        return winnerPlayerNumber != null ? winnerPlayerNumber : -1; // -1 = jogo em andamento
+    }
+
 }
