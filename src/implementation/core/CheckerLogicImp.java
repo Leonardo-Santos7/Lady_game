@@ -53,6 +53,34 @@ public class CheckerLogicImp implements CheckerLogic {
         int rowDistance = origin.rowDistance(destination);
 
         if (peace.isChecker()) {
+            if (!movement.isDiagonal()) return false;
+
+            int rowDiff = origin.rowDistance(destination);
+            int colDiff = origin.columnDistance(destination);
+
+            int rowStep = (destination.getRow() - origin.getRow()) / rowDiff;
+            int colStep = (destination.getColumn() - origin.getColumn()) / colDiff;
+
+            int r = origin.getRow() + rowStep;
+            int c = origin.getColumn() + colStep;
+
+            boolean foundOpponent = false;
+
+            while (r != destination.getRow() && c != destination.getColumn()) {
+                PositionCheckers pos = new PositionCheckers(r, c);
+                Peace mid = board.getPeace(pos);
+
+                if (!mid.isEmpty()) {
+                    if (mid.belongsToPlayer(playerActual.getNumber())) {
+                        return false;
+                    }
+                    if (foundOpponent) return false;
+                    foundOpponent = true;
+                }
+
+                r += rowStep;
+                c += colStep;
+            }
 
             return true;
         } else {
@@ -78,9 +106,14 @@ public class CheckerLogicImp implements CheckerLogic {
 
     @Override
     public void executeMovement(PositionCheckers destination, PositionCheckers origin) {
+        Peace peace = board.getPeace(origin);
 
-        Peace peaceAtDestination = board.getPeace(destination);
-        if (peaceAtDestination != null && !peaceAtDestination.isEmpty()) {
+        if (peace == null || peace.isEmpty()) {
+            System.out.println("Movimento inválido: sem peça na origem.");
+            return;
+        }
+
+        if (!board.getPeace(destination).isEmpty()) {
             System.out.println("Movimento inválido: a casa de destino já está ocupada.");
             return;
         }
@@ -92,7 +125,27 @@ public class CheckerLogicImp implements CheckerLogic {
             return;
         }
 
-        if (movement.isCapture()) {
+        if (peace.isChecker()) {
+            int rowDiff = origin.rowDistance(destination);
+            int rowStep = (destination.getRow() - origin.getRow()) / rowDiff;
+            int colStep = (destination.getColumn() - origin.getColumn()) / rowDiff;
+
+            int r = origin.getRow() + rowStep;
+            int c = origin.getColumn() + colStep;
+
+            while (r != destination.getRow() && c != destination.getColumn()) {
+                PositionCheckers pos = new PositionCheckers(r, c);
+                Peace mid = board.getPeace(pos);
+
+                if (!mid.isEmpty() && !mid.belongsToPlayer(playerActual.getNumber())) {
+                    board.setPeace(pos, new Peace());
+                    break;
+                }
+
+                r += rowStep;
+                c += colStep;
+            }
+        } else if (movement.isCapture()) {
             PositionCheckers mid = movement.getPositionCaptured();
             Peace middlePiece = board.getPeace(mid);
 
@@ -100,9 +153,20 @@ public class CheckerLogicImp implements CheckerLogic {
                 System.out.println("Captura inválida: peça intermediária ausente ou é sua.");
                 return;
             }
+
+            board.setPeace(mid, new Peace());
         }
 
         board.movementPeace(movement);
+
+        Peace movedPiece = board.getPeace(destination);
+        if (!movedPiece.isChecker()) {
+            if ((movedPiece.getPlayer() == 1 && destination.getRow() == 0) ||
+                    (movedPiece.getPlayer() == 2 && destination.getRow() == 7)) {
+                movedPiece.promoteToChecker();
+            }
+        }
+
         changePlayer();
     }
 

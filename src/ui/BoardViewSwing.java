@@ -21,6 +21,8 @@ public class BoardViewSwing extends JFrame implements BoardViewer {
     private static final Color COR2 = new Color(14, 44, 136);
     private static final Icon PEAO_BRANCO = carregarIcone("/assets/pedraBranca.png");
     private static final Icon PEAO_VERMELHO = carregarIcone("/assets/pedraVermelha.png");
+    private static final Icon DAMA_VERMELHA = carregarIcone("/assets/dama_vermelha.png");
+    private static final Icon DAMA_BRANCA = carregarIcone("/assets/dama_branca.png");
 
     // Construtor vazio
     public BoardViewSwing() {
@@ -90,6 +92,8 @@ public class BoardViewSwing extends JFrame implements BoardViewer {
                     switch (tipoPeca) {
                         case PEACE_PLAYER1 -> botao.setIcon(PEAO_VERMELHO);
                         case PEACE_PLAYER2 -> botao.setIcon(PEAO_BRANCO);
+                        case CHECKERS_PLAYER1 -> botao.setIcon(DAMA_VERMELHA);
+                        case CHECKERS_PLAYER2 -> botao.setIcon(DAMA_BRANCA);
                         default -> botao.setIcon(null);
                     }
                 }
