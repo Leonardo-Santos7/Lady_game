@@ -5,5 +5,8 @@ public interface BoardViewer {
     void highlightsHouse(int row, int column, boolean highlights);
     void messages(String message);
 
-    void showMenu();
+    interface BoardView {
+        // Métodos para alternar entre as visualizações
+        void showInitialMenu();
+    }
 }
