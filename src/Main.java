@@ -1,10 +1,9 @@
-import abstraction.MenuInicialTESTE;
+import javax.swing.SwingUtilities;
+import ui.BoardViewSwing;
 import implementation.core.CheckerLogic;
 import implementation.core.CheckerLogicImp;
 import abstraction.CheckersController;
-import ui.BoardViewSwing;
 
-import javax.swing.SwingUtilities;
 
 public class Main {
     public static void main(String[] args) {
@@ -22,7 +21,8 @@ public class Main {
 
             boardViewerSwing.setVisible(true);
 
-
+            new BoardViewSwing();
         });
     }
 }
+
