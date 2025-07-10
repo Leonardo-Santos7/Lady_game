@@ -74,9 +74,6 @@ public class Peace {
     public int getPlayer(){
         return player;
     }
-    public int getValue(){
-        return type.getValue();
-    }
 }
 
 

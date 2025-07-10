@@ -2,15 +2,9 @@ package implementation.model;
 
 public class Player {
     private int number;
-    private String name;
 
-    public Player(int number, String name){
+    public Player(int number){
         this.number = number;
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getNumber(){

@@ -73,8 +73,4 @@ public class Board {
         }
         return count;
     }
-
-    public int getValuePeace(int row, int column){
-        return getPeace(new PositionCheckers(row, column)).getValue();
-    }
 }

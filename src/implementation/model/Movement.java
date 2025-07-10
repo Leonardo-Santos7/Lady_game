@@ -32,15 +32,11 @@ public class Movement {
         return positionCaptured;
     }
 
-    public boolean movementSimple() {
-        return origin.rowDistance(destination) == 1;
-    }
-
     public boolean isCapture(){
         return isCapture;
     }
 
     public boolean isDiagonal(){
-        return origin.isDiagonalOf(destination);
+        return !origin.isDiagonalOf(destination);
     }
 }

@@ -17,7 +17,7 @@ abstract class MovementExecutor {
 
     public final void performMove() {
         if (!validateDestination()) return;
-        if (!movement.isDiagonal()) return;
+        if (movement.isDiagonal()) return;
 
         if (isCapture()) {
             handleCapture();

@@ -17,7 +17,7 @@ public class BoardViewSwing extends JFrame implements BoardViewer, BoardViewer.B
     private CheckersController controller;
 
     private static final int TAMANHO = 8;
-    private static final int TIME_LIMIT_SECONDS = 460;
+    private static final int TIME_LIMIT_SECONDS = 60;
     private static final Color COR1 = new Color(234, 225, 225, 255);
     private static final Color COR2 = new Color(14, 44, 136);
     private static final Icon PEAO_BRANCO = carregarIcone("assets/pedraBranca.png");

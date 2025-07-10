@@ -1,6 +1,5 @@
 package implementation.core;
 
-import implementation.factories.PeaceFactory;
 import implementation.model.*;
 
 public class CheckerLogicImp implements CheckerLogic {
@@ -19,8 +18,8 @@ public class CheckerLogicImp implements CheckerLogic {
 
     private void startGame(){
         board = new Board();
-        player1 = new Player(1, "luigi");
-        player2 = new Player(2, "Leonardo");
+        player1 = new Player(1);
+        player2 = new Player(2);
         playerActual = player1;
 
         player1CapturedPieces = 0;
@@ -54,14 +53,14 @@ public class CheckerLogicImp implements CheckerLogic {
         Movement movement = new Movement(origin, destination);
 
 
-        if (!movement.isDiagonal()) {
+        if (movement.isDiagonal()) {
             return false;
         }
 
         int rowDistance = origin.rowDistance(destination);
 
         if (peace.isChecker()) {
-            if (!movement.isDiagonal()) return false;
+            if (movement.isDiagonal()) return false;
 
             int rowDiff = origin.rowDistance(destination);
             int colDiff = origin.columnDistance(destination);
